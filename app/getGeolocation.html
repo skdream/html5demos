@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>geoLocation</title>
+	<script src="http://static.woniu.com/scripts/jquery/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=TYmtPpNngXgXZxdvFkoRxjD4"></script>
+	<style>
+	.bd-map{
+		width: 800px;
+		height: 600px;
+	}
+	</style>
+</head>
+<body>
+	
+
+<div id="allmap" class="bd-map"></div>
+<div id="r-result">请输入:<input type="text" id="suggestId" size="20" value="百度" style="width:150px;" /></div>
+<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+
+<script type="text/javascript">
+
+// 百度地图API功能
+function G(id) {
+	return document.getElementById(id);
+}
+
+var map = new BMap.Map('allmap');
+	map.addEventListener("click",function(e){
+		alert('当前经纬度：'+e.point.lng + "," + e.point.lat);
+	});
+	map.setDefaultCursor("url('bird.cur')");
+
+
+
+	var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+		{"input" : "suggestId"
+		,"location" : map
+	});
+
+	ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+	var str = "";
+		var _value = e.fromitem.value;
+		var value = "";
+		if (e.fromitem.index > -1) {
+			value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		}    
+		str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+		
+		value = "";
+		if (e.toitem.index > -1) {
+			_value = e.toitem.value;
+			value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		}    
+		str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+		G("searchResultPanel").innerHTML = str;
+	});
+
+	var myValue;
+	ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+	var _value = e.item.value;
+		myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+		
+		setPlace();
+	});
+
+	function setPlace(){
+		map.clearOverlays();    //清除地图上所有覆盖物
+		function myFun(){
+			var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+			map.centerAndZoom(pp, 18);
+			map.addOverlay(new BMap.Marker(pp));    //添加标注
+		}
+		var local = new BMap.LocalSearch(map, { //智能搜索
+		  onSearchComplete: myFun
+		});
+		local.search(myValue);
+	}
+
+$.ajax({
+	url: 'http://api.map.baidu.com/location/ip?ak=TYmtPpNngXgXZxdvFkoRxjD4&coor=bd09ll',
+	type: 'get',
+	dataType: 'jsonp',
+})
+.done(function(data) {
+	alert(JSON.stringify(data));
+
+	var point = data.content.point,
+		city = data.content.address_detail.city;
+
+		console.log(point.x +' ,'+ point.y + city);
+	map.centerAndZoom(new BMap.Point(point.x,point.y),13);
+	map.addControl(new BMap.MapTypeControl());
+	map.setCurrentCity(city);
+	map.enableScrollWheelZoom(true);
+
+
+})
+.fail(function() {
+	console.log("error");
+})
+.always(function() {
+	console.log("complete");
+});
+
+
+
+
+
+
+window.navigator.geolocation.getCurrentPosition(function(geo){
+	var lon = geo.coords.longitude,
+		lat = geo.coords.latitude,
+		//url = "http://api.map.baidu.com/ag/coord/convert?from=0&to=2&x=" + lon + "&y=" + lat ;
+		url = "http://api.map.baidu.com/geoconv/v1/?from=1&to=5&ak=TYmtPpNngXgXZxdvFkoRxjD4&coords=" + lon  + "," + lat;
+
+alert('success: lon:'+lon+'lat:'+lat);
+	$.ajax({
+		url: url,
+		type: 'get',
+		dataType: 'jsonp',
+		jsonp:'callback',
+		success:function(data){
+			//console.log(data);
+
+			alert(JSON.stringify(data))
+		}
+	});
+
+
+
+},function(data){
+	alert(data.PERMISSION_DENIED ? "定位失败，请确认定位是否开启" : "获取当前位置失败，请您稍后重试")
+},{
+	enableHighAccuracy : true
+});
+	</script>
+</body>
+</html>

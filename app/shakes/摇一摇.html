@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>摇一摇，抢微信现金红包，古龙群侠与你一起闹元宵！</title>
+<link rel="stylesheet" type="text/css" href="http://hd.heitao.com/css/glact/yyy/style.css">
+<script type="text/javascript" src="http://static.woniu.com/script/jquery/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  var yyy_tf = 0;
+  var hh=$(window).height();
+  var ww=$(window).width();
+ if(hh<=480){
+  $(".bottom").css({"height":"60px"});
+  $(".top_logo").css({"margin-top":"7px"});
+   $(".xz_btn").css({"margin-top":"12px"});
+    $(".up").css({"height":0.5*hh-30+"px"});
+    $(".center").css({"height":0.41875*ww+"px","width":"100%","position":"fixed","top":0.5*hh-0.21*ww-30+"px"});
+    $(".up img").css({"margin-top":0.5*hh-0.22*ww-29+"px"})
+    $(".down").css({"height":0.5*hh-30+"px","top":0.5*hh-30+"px"});
+  }
+  else if(hh>480){
+    $(".up").css({"height":0.5*hh-40+"px"});
+    $(".center").css({"height":0.41875*ww+"px","width":"100%","position":"fixed","top":0.5*hh-0.21*ww-40+"px"});
+    $(".up img").css({"margin-top":0.5*hh-0.22*ww-39+"px"})
+    $(".down").css({"height":0.5*hh-40+"px","top":0.5*hh-40+"px"});    
+  }
+  if(window.DeviceMotionEvent) {
+    var speed = 25;
+    var x = y = z = lastX = lastY = lastZ = 0;
+    window.addEventListener('devicemotion', function(){
+        var acceleration =event.accelerationIncludingGravity;
+        x = acceleration.x;
+        y = acceleration.y;    
+        if(!$(".up,.down").is(":animated")){
+          if(Math.abs(x-lastX) > speed || Math.abs(y-lastY) > speed) {
+            if(yyy_tf == 1) {
+                return;
+            }
+            yyy_tf = 1;
+          if(hh<=480){           
+            $(".up").animate({"top":-0.21*ww+"px"},200).delay(600).animate({"top":"0px"},200).delay(600).show(function(){location.href="/glact/yyy/ydo";});
+            $(".down").animate({"top":0.5*hh+0.21*ww-30+"px"},200).delay(600).animate({"top":0.5*hh-30+"px"},200);
+             }
+       else if(hh>480){
+          $(".up").animate({"top":-0.21*ww+"px"},200).delay(600).animate({"top":"0px"},200).delay(600).show(function(){location.href="/glact/yyy/ydo";});
+          $(".down").animate({"top":0.5*hh+0.21*ww-40+"px"},200).delay(600).animate({"top":0.5*hh-40+"px"},200);
+             } 
+         }
+        }
+        lastX = x;
+        lastY = y;
+    }, false);
+}
+    $(".bottom").click(function(){
+      location.href="http://gl.heitao.com/qrcode";
+    })
+    
+})
+</script>
+</head>
+<body>
+<style>
+    .share {display: none;}
+</style>
+<div class="share">
+    <img src="http://hd.heitao.com/img/glact/yyy/hb/share_icon.png">
+</div>
+<div class="up"><img src="http://hd.heitao.com/img/glact/yyy/01_02.jpg"></div>
+<div class="center"><img src="http://hd.heitao.com/img/glact/yyy/01_03.jpg"></div>
+<div class="down"><img src="http://hd.heitao.com/img/glact/yyy/01_04.jpg"></div>
+<div class="bottom">
+    <img class="top_logo" src="http://hd.heitao.com/img/glact/yyy/top_logo.png">
+    <img class="xz_btn" src="http://hd.heitao.com/img/glact/yyy/xz_btn.png">
+</div>
+<div class="tanceng"></div>
+<div class="tank_1"><img src="http://hd.heitao.com/img/glact/yyy/hb/share1.png"></div>
+</body>
+</html>
