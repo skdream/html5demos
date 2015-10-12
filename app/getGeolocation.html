@@ -17,11 +17,15 @@
 	
 
 <div id="allmap" class="bd-map"></div>
-<div id="r-result">请输入:<input type="text" id="suggestId" size="20" value="百度" style="width:150px;" /></div>
+<div id="r-result">
+请输入店铺名称:<input type="text" id="suggestId" size="20" value="百度" style="width:150px;" />
+店铺坐标：<input type="text" id="shopLocal">
+
+</div>
 <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
 
-<script type="text/javascript">
 
+<script type="text/javascript">
 // 百度地图API功能
 function G(id) {
 	return document.getElementById(id);
@@ -29,11 +33,16 @@ function G(id) {
 
 var map = new BMap.Map('allmap');
 	map.addEventListener("click",function(e){
-		alert('当前经纬度：'+e.point.lng + "," + e.point.lat);
+		//alert('当前经纬度：'+e.point.lng + "," + e.point.lat);
+		$('#shopLocal').val(e.point.lng+','+e.point.lat);
 	});
-	map.setDefaultCursor("url('bird.cur')");
+	//map.setDefaultCursor("url('bird.cur')");
+	map.setDefaultCursor("crosshair");
 
-
+/*	map.addEventListener('mouseover',function(e){
+		var point = e.currentTarget.getCenter();
+		console.log('当前经纬度：'+point.lng + "," + point.lat);
+	})*/
 
 	var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
 		{"input" : "suggestId"
@@ -60,6 +69,7 @@ var map = new BMap.Map('allmap');
 
 	var myValue;
 	ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+		console.log(e);
 	var _value = e.item.value;
 		myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
 		G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
@@ -137,6 +147,60 @@ alert('success: lon:'+lon+'lat:'+lat);
 },{
 	enableHighAccuracy : true
 });
-	</script>
+
+
+
+
+/*
+var local_domain_arr = ['apple.com','woniu.com','snail.com','url.cn','qq.com','17173.com','baidu.com','163.com','t.cn','sina.com.cn','sina.cn'];
+// <a href="forum.php?mod=forumdisplay&amp;fid=9">活动沙龙</a>
+
+
+
+function IsValidUrl(str){
+
+	var regu="^(https?://)"
+			+"?(([0-9a-z_!~*'().&=+$%-]+:)?[0-9a-z_!~*'().&=+$%-]+@)?"
+			+"(([0-9]{1,3}\.){3}[0-9]{1,3}"
+			+"|"
+			+"([0-9a-z_!~*'()-]+\.)*"
+			+"([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\."
+			+"[a-z]{2,6})"
+			+"(:[0-9]{1,4})?"
+			+"((/?)|"
+			+"(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+	var re=newRegExp(regu);
+
+	if(!re.test(str)){
+		return false;
+	}
+	return true;
+}
+    
+function allow_outer_links(local_domain_arr, url) {
+
+    var pattern= '^http[s]?://';
+    var i = 0;
+    for(i=0;i<local_domain_arr.length;i++){
+        
+        var local_domain = local_domain_arr[i];
+        if(i==0){
+            pattern += 'www.' + local_domain + '|' + local_domain + '|[\w\_]+\.' + local_domain;
+        }else{
+            pattern += '|www.' + local_domain + '|' + local_domain + '|[\w\_]+\.' + local_domain;
+        }
+    }
+    //pattern += ")((/?)|(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+    pattern += '(.+?)gi';
+
+    var regPattern = new RegExp(pattern);
+    return regPattern.test(url); 
+}
+
+
+ aa = allow_outer_links(local_domain_arr,'http://www.woniu.com/t.do?wd=14-03-01-GN-9YIN-360-1&r=http://t.im/s5in');
+console.log(aa);*/
+
+</script>
 </body>
 </html>
